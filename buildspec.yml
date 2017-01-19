@@ -6,7 +6,7 @@ phases:
       - npm install -g hirenj/node-reciperunner
   pre_build:
     commands:
-      - testversion 'uniprot.json' --static 'UNIPROT_RELEASE' --regex 'downloads/([\d_A-Za-z]+)\.sql'
+      - testversion 'uniprot.json' --header 'X-UniProt-Release' --remote 'http://www.uniprot.org/uniprot/P12345'
   build:
     commands:
       - echo "Running build step $BUILD_TAXONOMY"
