@@ -10,7 +10,7 @@ phases:
   build:
     commands:
       - echo "Running build step $BUILD_TAXONOMY"
-      - true || bash ./retrieve_glycoinfo.sh $BUILD_TAXONOMY > sources/glycosylation.tsv
+      - bash ./retrieve_glycoinfo.sh $BUILD_TAXONOMY > sources/glycosylation.tsv
       - runrecipe --input sources --output json --env version="$TARGETVERSION" --env git="$GIT_STATUS" --env timestamp="$(date -u +%FT%TZ)"
       - if [ ! -e dist ]; then mkdir dist; fi
       - mv json/sources_glycosylation.json dist/glycosylation.json
