@@ -1,0 +1,67 @@
+{
+"sources" : {
+  "files" : [ "glycosylation.tsv" ]
+},
+"preprocess" : {
+  "data" : {
+    "$[*].uniprot" : {
+      "uniprot" : "@.uniprot",
+      "sites" : [ "$.(match(@.glyco,'\\\\s+([^;]+);?'))", {"ARRAY": "true", "0" : "$.(@.value)" } ]
+    }
+  }
+},
+"template" :{
+  "data" : {
+    "$.data.*[?(@.uniprot)].uniprot" : {
+      "uniprot" : "@.uniprot",
+      "sites": [ "$.sites", [ "$[0].(match(@,'\\\\d (\\\\d+) ([^\\\\.]+)')[0] || [])", { "ARRAY" : "collapse", "0": "$.(@.value[0])", "1" : "$.(compositions[@.value[1]])", "2" : "$.(@.value[1])" } ]  ]
+    }
+  },
+  "metadata": {
+    "msdata-version" : "1.2",
+    "data-version" : "$.(version)",
+    "software" : {"ARRAY": "true", "0" : { "name" : "hirenj/node-uniprotsync", "version" : "$.(git)" , "run-date" : "$.(timestamp)" }},
+    "title" : "UniProt glycosylation data",
+    "mimetype" : "application/json+msdata"
+  }
+},
+"environment" : {
+  "compositions" : {
+    "N-linked (GlcNAc" : "GlcNAc(b1-4)GlcNAc",
+    "O-linked (GlcNAc)": "GlcNAc",
+    "O-linked (GlcNAc": "GlcNAc",
+    "O-linked (GlcNAc6P)": "GlcNAc6P",
+    "O-linked (GlcNAc6P": "GlcNAc6P",
+    "O-linked (GlcA)": "GlcA",
+    "O-linked (GlcA": "GlcA",
+    "O-linked (Man6P)": "Man6P",
+    "O-linked (Man6P": "Man6P",
+    "O-linked (GalNAc" : "GalNAc",
+    "O-linked (GalNAc)" : "GalNAc",
+    "O-linked (Glc" : "Glc",
+    "O-linked (Glc)" : "Glc",
+    "N-linked (Glc) (glycation)":"Glc",
+    "N-linked (Glc":"Glc",
+    "C-linked (Man" : "Man",
+    "C-linked (Man)" : "Man",
+    "O-linked (Fuc)": "Fuc",
+    "O-linked (Fuc": "Fuc",
+    "O-linked (Hex": "Hex",
+    "O-linked (Hex)": "Hex",
+    "O-linked (Man": "Man",
+    "O-linked (Man)": "Man",
+    "S-linked (Gal": "Gal",
+    "S-linked (Gal)": "Gal",
+    "S-linked (Glc": "Glc",
+    "S-linked (Glc)": "Glc",
+    "S-linked (Hex": "Hex",
+    "S-linked (Hex)": "Hex",
+    "O-linked (HexNAc": "HexNAc",
+    "O-linked (HexNAc)": "HexNAc",
+    "O-linked (Gal": "Gal",
+    "O-linked (Gal)": "Gal",
+    "O-linked (Xyl": "Xyl",
+    "O-linked (Xyl)": "Xyl"
+  }
+}
+}
