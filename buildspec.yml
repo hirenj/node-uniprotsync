@@ -6,14 +6,11 @@ phases:
       - npm install -g hirenj/node-reciperunner
   pre_build:
     commands:
-      - testversion 'glycosylation.json' --header 'X-UniProt-Release' --remote 'http://www.uniprot.org/uniprot/P12345'
+      - bash ./check_versions.sh $BUILD_TAXONOMY
   build:
     commands:
       - echo "Running build step $BUILD_TAXONOMY"
-      - bash ./retrieve_glycoinfo.sh $BUILD_TAXONOMY > sources/glycosylation.tsv
-      - runrecipe --input sources --output json --env version="$TARGETVERSION" --env git="$GIT_STATUS" --env timestamp="$(date -u +%FT%TZ)"
-      - if [ ! -e dist ]; then mkdir dist; fi
-      - mv json/sources_glycosylation.json dist/glycosylation.json
+      - bash ./run_taxonomies.sh $BUILD_TAXONOMY
   post_build:
     commands:
       - echo "Skipping post_build"

@@ -21,6 +21,9 @@
     "msdata-version" : "1.2",
     "data-version" : "$.(version)",
     "software" : {"ARRAY": "true", "0" : { "name" : "hirenj/node-uniprotsync", "version" : "$.(git)" , "run-date" : "$.(timestamp)" }},
+    "sample" : {
+      "species" : "$.(+taxid)"
+    },
     "title" : "UniProt glycosylation data",
     "mimetype" : "application/json+msdata"
   }
