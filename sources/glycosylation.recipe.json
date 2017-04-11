@@ -24,7 +24,7 @@
     "sample" : {
       "species" : "$.(+taxid)"
     },
-    "title" : "UniProt glycosylation data",
+    "title" : "$.('UniProt glycosylation data '+taxid)",
     "mimetype" : "application/json+msdata"
   }
 },
