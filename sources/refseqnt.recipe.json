@@ -7,10 +7,6 @@
     "$[*].uniprot" : {
       "uniprot" : "@.uniprot",
       "refseqnt" : "@.refseq"
-    },
-    "$[*].refseqnt" : {
-      "uniprot" : "@.uniprot",
-      "refseqnt" : "@.refseq"
     }
   },
   "metadata": {

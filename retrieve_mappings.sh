@@ -1,6 +1,6 @@
 #!/bin/bash
 
-other_taxids="CAEEL_6239,HUMAN_9606,MOUSE_10090,RAT_10116,YEAST_559292,SCHPO_284812"
+other_taxids="HUMAN_9606"
 
 echo "uniprot	refseq"
 for taxid in ${other_taxids//,/ }; do
