@@ -6,7 +6,7 @@ if [ ! -e dist ]; then
 	mkdir dist;
 fi
 
-echo "uniprot\trefseq" > sources/mappings.tsv
+touch sources/mappings.tsv
 
 for taxid in ${taxids//,/ }; do
 	echo "Retrieving glycosylation data for $taxid"
