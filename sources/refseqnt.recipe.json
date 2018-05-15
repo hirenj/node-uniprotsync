@@ -1,0 +1,27 @@
+{
+"sources" : {
+  "files" : [ "mappings.tsv" ]
+},
+"template" : {
+  "data" : {
+    "$[*].uniprot" : {
+      "uniprot" : "@.uniprot",
+      "refseqnt" : "@.refseq"
+    },
+    "$[*].refseqnt" : {
+      "uniprot" : "@.uniprot",
+      "refseqnt" : "@.refseq"
+    }
+  },
+  "metadata": {
+    "data-version" : "$.(version)",
+    "software" : {"ARRAY": "true", "0" : { "name" : "hirenj/node-uniprotsync", "version" : "$.(git)" , "run-date" : "$.(timestamp)" }},
+    "sample" : {
+    },
+    "title" : "$.('UniProt refseq nucleotide data')",
+    "mimetype" : "application/json"
+  }
+},
+"environment" : {
+}
+}
