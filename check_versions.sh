@@ -33,5 +33,5 @@ if [ $exit_code -eq 0 ]; then
 else
 	echo "UniProt synced files are up to date"
 	touch VERSION_MATCHING
-	false
+	exit 2
 fi
