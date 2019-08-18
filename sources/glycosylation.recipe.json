@@ -14,7 +14,7 @@
   "data" : {
     "$.data.*[?(@.uniprot)].uniprot" : {
       "uniprot" : "@.uniprot",
-      "sites": [ "$.sites", [ "$[0].(match(@,'\\\\d (\\\\d+) ([^\\\\.]+)')[0] || [])", { "ARRAY" : "collapse", "0": "$.(+@.value[0])", "1" : "$.(compositions[@.value[1]])" } ]  ]
+      "sites": [ "$.sites", [ "$[0].(match(@,'\\\\d (\\\\d+) ([^\\\\.\\\\x29]+).*0000269')[0] || [])", { "ARRAY" : "collapse", "0": "$.(+@.value[0])", "1" : "$.(compositions[@.value[1]])" } ]  ]
     }
   },
   "metadata": {
@@ -30,9 +30,12 @@
 },
 "environment" : {
   "compositions" : {
+    "N-linked (GalNAc" : "GalNAc",
+    "N-linked (Hex" : "Hex",
     "N-linked (GlcNAc" : "GlcNAc(b1-4)GlcNAc",
     "O-linked (GlcNAc)": "GlcNAc",
     "O-linked (GlcNAc) serine": "GlcNAc",
+    "O-linked (GlcNAc) serine alternate": "GlcNAc",
     "O-linked (GlcNAc) threonine": "GlcNAc",
     "O-linked (GlcNAc) tyrosine": "GlcNAc",
     "O-linked (GlcNAc": "GlcNAc",
@@ -58,6 +61,7 @@
     "O-linked (Glc)" : "Glc",
     "N-linked (Glc) (glycation)":"Glc",
     "N-linked (Glc) (glycation) lysine":"Glc",
+    "N-linked (Glc) (glycation) lysine in vitro":"Glc",
     "N-linked (Glc) (glycation) valine":"Glc",
     "N-linked (Glc) (glycation) isoleucine":"Glc",
     "N-linked (Glc":"Glc",
