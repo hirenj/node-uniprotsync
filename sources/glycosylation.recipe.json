@@ -6,7 +6,7 @@
   "data" : {
     "$[*].uniprot" : {
       "uniprot" : "@.uniprot",
-      "sites" : [ "$.(match(@.glyco,'\\\\s+([^;]+);?'))", {"ARRAY": "true", "0" : "$.(@.value)" } ]
+      "sites" : [ "$.(split(@.glyco,'CARBOHYD ',true))", "$.(match(@.value,'^(\\\\d+).*/note=\"([^ ]+ \\\\([^\\\\).]+\\\\)?).*0000269')[0])"]
     }
   }
 },
@@ -14,7 +14,7 @@
   "data" : {
     "$.data.*[?(@.uniprot)].uniprot" : {
       "uniprot" : "@.uniprot",
-      "sites": [ "$.sites", [ "$[0].(match(@,'\\\\d (\\\\d+) ([^\\\\.\\\\x29]+).*0000269')[0] || [])", { "ARRAY" : "collapse", "0": "$.(+@.value[0])", "1" : "$.(compositions[@.value[1]])" } ]  ]
+      "sites": [ "$.sites", { "ARRAY": "true", "0" : "$.(+@.value[0])", "1" : "$.(compositions[@.value[1]])" } ]
     }
   },
   "metadata": {
