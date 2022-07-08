@@ -8,7 +8,7 @@ exit_code=1
 
 for taxid in ${taxids//,/ }; do
 	echo "Checking existence of UniProt glycosylation data for $taxid"
-	testversion_skip_exit "glycosylation-$taxid.json" --header 'X-UniProt-Release' --remote 'http://www.uniprot.org/uniprot/P12345'
+	testversion_skip_exit "glycosylation-$taxid.json" --header 'X-UniProt-Release' --remote 'https://rest.uniprot.org/uniprotkb/P12345.txt'
 	retcode=$?
 	if [ $retcode -ne 0 ]; then
 		echo "Existing UniProt json for $taxid"
@@ -19,7 +19,7 @@ for taxid in ${taxids//,/ }; do
 done
 
 echo "Checking existence of UniProt refseq mapping data"
-testversion_skip_exit "refseqnt.json" --header 'X-UniProt-Release' --remote 'http://www.uniprot.org/uniprot/P12345'
+testversion_skip_exit "refseqnt.json" --header 'X-UniProt-Release' --remote 'https://rest.uniprot.org/uniprotkb/P12345.txt'
 retcode=$?
 if [ $retcode -ne 0 ]; then
 	echo "Existing RefSeqNT UniProt json"
