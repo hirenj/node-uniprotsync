@@ -1,9 +1,10 @@
 #!/bin/bash
 
 taxids=$1
+outdir=${2:-/dist}
 
-if [ ! -e /dist ]; then
-	mkdir /dist;
+if [ ! -e "$outdir" ]; then
+	mkdir "$outdir";
 fi
 
 touch sources/mappings.tsv
@@ -15,12 +16,12 @@ for taxid in ${taxids//,/ }; do
 	if [ "$?" -gt 0 ]; then
 		exit 1
 	fi
-	mv json/sources_glycosylation.json /dist/glycosylation-$taxid.json
-	head -3 /dist/glycosylation-$taxid.json
+	mv json/sources_glycosylation.json "$outdir/glycosylation-$taxid.json"
+	head -3 "$outdir/glycosylation-$taxid.json"
 done
 
 bash ./retrieve_mappings.sh > sources/mappings.tsv
 
 runrecipe --input sources --output json --env version="$TARGETVERSION" --env git="$GIT_STATUS" --env timestamp="$(date -u +%FT%TZ)" --env taxid="$taxid"
 
-mv json/sources_refseqnt.json /dist/refseqnt.json
+mv json/sources_refseqnt.json $outdir/refseqnt.json
