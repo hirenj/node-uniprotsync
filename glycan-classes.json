@@ -1,0 +1,115 @@
+{
+    "N": {
+        "sequence": "Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-N)Asn",
+        "match": "contains",
+        "description": "N-glycan"
+    },
+    "Nman": {
+        "sequence": "Man(a1-3)[Man(a1-3)[Man(a1-6)]Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-N)Asn",
+        "match": "contains",
+        "excludes": ["GlcNAc(b1-?)Man"],
+        "description": "N-glycan, oligomannose"
+    },
+    "Nhyb": {
+        "sequence": "GlcNAc(b1-2)Man(a1-3)[Man(a1-3)[Man(a1-6)]Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-N)Asn",
+        "match": "contains",
+        "description": "N-glycan, hybrid"
+    },
+    "Ncpx": {
+        "sequence": "GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-N)Asn",
+        "match": "contains",
+        "description": "N-glycan, complex"
+    },
+    "Nfuc": {
+        "sequence": "Fuc(a1-6)GlcNAc(b1-N)Asn",
+        "match": "contains",
+        "description": "N-glycan with core fucose"
+    },
+    "M6P": {
+        "sequence": "P(u1-6)Man",
+        "match": "contains",
+        "description": "mannose 6-phosphate"
+    },
+    "OGalNAc": {
+        "sequence": "GalNAc(a1-O)Ser/Thr",
+        "match": "contains",
+        "description": "O-GalNAc glycan"
+    },
+    "Tn": {
+        "sequence": "GalNAc(a1-O)Ser/Thr",
+        "match": "exact",
+        "description": "O-GalNAc, Tn (GalNAc only)"
+    },
+    "C1": {
+        "sequence": "Gal(b1-3)GalNAc(a1-O)Ser/Thr",
+        "match": "contains",
+        "excludes": ["GlcNAc(b1-6)GalNAc(a1-O)Ser/Thr"],
+        "description": "O-GalNAc, core 1"
+    },
+    "C2": {
+        "sequence": "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-O)Ser/Thr",
+        "match": "contains",
+        "description": "O-GalNAc, core 2"
+    },
+    "C3": {
+        "sequence": "GlcNAc(b1-3)GalNAc(a1-O)Ser/Thr",
+        "match": "contains",
+        "excludes": ["GlcNAc(b1-6)GalNAc(a1-O)Ser/Thr"],
+        "description": "O-GalNAc, core 3"
+    },
+    "C4": {
+        "sequence": "GlcNAc(b1-3)[GlcNAc(b1-6)]GalNAc(a1-O)Ser/Thr",
+        "match": "contains",
+        "description": "O-GalNAc, core 4"
+    },
+    "OGlcNAc": {
+        "sequence": "GlcNAc(b1-O)Ser/Thr",
+        "match": "exact",
+        "description": "O-GlcNAc"
+    },
+    "OMan": {
+        "sequence": "Man(a1-O)Ser/Thr",
+        "match": "contains",
+        "description": "O-mannose glycan"
+    },
+    "OFuc": {
+        "sequence": "Fuc(a1-O)Ser/Thr",
+        "match": "contains",
+        "description": "O-fucose glycan"
+    },
+    "OGlc": {
+        "sequence": "Glc(b1-O)Ser",
+        "match": "contains",
+        "description": "O-glucose glycan"
+    },
+    "OGal": {
+        "sequence": "Gal(b1-O)Hyl",
+        "match": "contains",
+        "description": "O-galactose on hydroxylysine (collagen)"
+    },
+    "CMan": {
+        "sequence": "Man(a1-?)Trp",
+        "match": "exact",
+        "description": "C-mannose on tryptophan"
+    },
+    "GAG": {
+        "sequence": "GlcA(b1-3)Gal(b1-3)Gal(b1-4)Xyl(b1-O)Ser",
+        "match": "contains",
+        "description": "glycosaminoglycan linker"
+    },
+    "CS": {
+        "sequence": "GalNAc(b1-4)GlcA(b1-3)Gal(b1-3)Gal(b1-4)Xyl(b1-O)Ser",
+        "match": "contains",
+        "description": "chondroitin/dermatan sulfate"
+    },
+    "HS": {
+        "sequence": "GlcNAc(a1-4)GlcA(b1-3)Gal(b1-3)Gal(b1-4)Xyl(b1-O)Ser",
+        "match": "contains",
+        "description": "heparan sulfate/heparin"
+    },
+    "KS": {
+        "sequence": "{Gal(b1-3)[HSO3(u?-6)]GlcNAc(b1-3)}n*",
+        "match": "contains",
+        "description": "keratan sulfate"
+    }
+}
