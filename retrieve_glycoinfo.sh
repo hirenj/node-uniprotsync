@@ -5,7 +5,7 @@ taxids=$1
 echo "uniprot	glyco"
 for taxid in ${taxids//,/ }; do
 	url="https://rest.uniprot.org/uniprotkb/stream?fields=accession,ft_carbohyd&format=tsv&query=organism_id:$taxid%20AND%20(ft_carbohyd_exp:*)"
-	curl $url | tail -n+2 | sed -e 's/e;/e/g'
+	curl $url | tail -n+2 | sed -e 's/e;/e/g' | sed -e 's/0000244/0000269/' -e 's/0007013/0000269/' -e 's/0008037/0000269/' -e 's/0008035/0000269/' -e 's/0007014/0000269/' -e 's/0000245/0000269/' -e 's/0007675/0000269/' -e 's/0007744/0000269/' 
 	if [ $? -gt 0 ]; then
 		exit 1
 	fi
