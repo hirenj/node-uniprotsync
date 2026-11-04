@@ -16,7 +16,10 @@ for taxid in ${taxids//,/ }; do
 	# a `Retry-After` header UniProt sends with the 429, instead of us overriding it with a fixed,
 	# too-short delay that just re-triggers the same rate limit. --retry-max-time caps the total
 	# time spent retrying one request. --max-time: give up on a stalled connection instead of
-	# trickling for minutes before failing anyway.
-	curl --fail --silent --show-error --retry 5 --retry-max-time 600 --connect-timeout 10 --max-time 300 "$url" \
+	# trickling for minutes before failing anyway. -A: UniProt's API docs ask scripted/bulk
+	# consumers to identify themselves with a contact so they can be told apart from anonymous
+	# traffic, which otherwise tends to get throttled harder under load.
+	curl --fail --silent --show-error --retry 5 --retry-max-time 600 --connect-timeout 10 --max-time 300 \
+		-A "node-uniprotsync (https://github.com/hirenj/node-uniprotsync; hirenj@gmail.com)" "$url" \
 		| tail -n+2 | sed -e 's/e;/e/g' -e 's/0000244/0000269/' -e 's/0007013/0000269/' -e 's/0008037/0000269/' -e 's/0008035/0000269/' -e 's/0007014/0000269/' -e 's/0000245/0000269/' -e 's/0007675/0000269/' -e 's/0007744/0000269/'
 done
