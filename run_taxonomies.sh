@@ -1,4 +1,9 @@
 #!/bin/bash
+# set -e: retrieve_glycoinfo.sh/retrieve_mappings.sh now fail loudly on a bad download (see their
+# own comments), but nothing here was checking their exit status - without -e, a failed retrieve
+# left sources/*.tsv empty/truncated and run_taxonomies.sh carried on into runrecipe anyway, which
+# crashed far from the real cause with an opaque, taxid-less stack trace.
+set -e
 
 taxids=$1
 outdir=${2:-/dist}
