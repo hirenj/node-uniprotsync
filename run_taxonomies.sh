@@ -26,6 +26,11 @@ for taxid in ${taxids//,/ }; do
 	else
 		echo "Skipping $taxid - no glycosylation records"
 	fi
+	# UniProt rate-limits by request rate, not just concurrency - firing one REST request per taxid
+	# back-to-back across all 9 organisms with nothing in between is what triggered 429s here. A
+	# small gap costs little against a once-a-quarter job and makes the limit much less likely to
+	# trip at all, on top of retrieve_glycoinfo.sh's own retry/backoff.
+	sleep 3
 done
 
 bash ./retrieve_mappings.sh > sources/mappings.tsv
