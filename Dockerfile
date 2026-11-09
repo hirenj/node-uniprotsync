@@ -26,7 +26,15 @@ WORKDIR /build
 # --user. a+rwX, not a narrower chmod, since the exact files written vary by taxid run.
 RUN chmod -R a+rwX /build
 
+# git refuses to operate on a repo it doesn't own ("detected dubious ownership", git >= 2.35.2,
+# CVE-2022-24765) - /build is owned by root (COPY, above) but run_taxonomies.sh runs as the
+# arbitrary host UID from --user, so `git rev-parse HEAD` (GIT_STATUS, this repo's own pipeline
+# version) would otherwise fail outright. --system (not --global) so it applies regardless of
+# $HOME, which isn't reliably set for an arbitrary numeric --user with no /etc/passwd entry.
+# Scoped to this one path, not a wildcard.
+RUN git config --system --add safe.directory /build
+
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
 
-CMD /build/run_taxonomies.sh 9606,7227,6239,284812,559292,9823,10090,10116,10029
+CMD /build/run_taxonomies.sh 9606,7227,6239,284812,559292,9823,10090,10116,10029 /dist /work

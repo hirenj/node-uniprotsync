@@ -7,6 +7,13 @@ set -e
 
 taxids=$1
 outdir=${2:-/dist}
+workdir=${3:-/work}
+
+# GIT_STATUS/TARGETVERSION were referenced here but never actually set anywhere (not in the
+# Dockerfile, not by the orchestrator) - every published file's data-version silently defaulted to
+# "unknown" regardless of success or failure. GIT_STATUS: this repo's own commit (pipeline
+# version) - allow an existing env var to win so a caller can still override it.
+GIT_STATUS="${GIT_STATUS:-$(git rev-parse HEAD 2>/dev/null || echo unknown)}"
 
 if [ ! -e "$outdir" ]; then
 	mkdir "$outdir";
@@ -14,17 +21,36 @@ fi
 
 touch sources/mappings.tsv
 
+# Per-taxid cache of the last successfully published glycosylation-<taxid>.json, on the
+# orchestrator's persistent /work mount (survives across quarterly runs) - used as a fallback below
+# when a live UniProt fetch fails, so one bad quarter for UniProt doesn't mean zero data for a
+# species we've successfully built before.
+cachedir="$workdir/glycosylation-cache"
+mkdir -p "$cachedir"
+
 for taxid in ${taxids//,/ }; do
 	echo "Retrieving glycosylation data for $taxid"
-	bash ./retrieve_glycoinfo.sh $taxid > sources/glycosylation.tsv
-	runrecipe --input sources --output json --env version="$TARGETVERSION" --env git="$GIT_STATUS" --env timestamp="$(date -u +%FT%TZ)" --env taxid="$taxid"
-	if [ "$?" -gt 0 ]; then
-		exit 1
-	fi
-	if node normalize_sites_cli.js json/sources_glycosylation.json "$outdir/glycosylation-$taxid.json"; then
-		head -3 "$outdir/glycosylation-$taxid.json"
+	if bash ./retrieve_glycoinfo.sh $taxid > sources/glycosylation.tsv; then
+		# TARGETVERSION: the real UniProt release this data just came from (see
+		# retrieve_glycoinfo.sh - there's no way to request a specific past release, only observe
+		# which one we got), so a fresh file is correctly stamped instead of "unknown".
+		TARGETVERSION=$(cat uniprot_release.txt 2>/dev/null || echo unknown)
+		runrecipe --input sources --output json --env version="$TARGETVERSION" --env git="$GIT_STATUS" --env timestamp="$(date -u +%FT%TZ)" --env taxid="$taxid"
+		if node normalize_sites_cli.js json/sources_glycosylation.json "$outdir/glycosylation-$taxid.json"; then
+			head -3 "$outdir/glycosylation-$taxid.json"
+			cp "$outdir/glycosylation-$taxid.json" "$cachedir/$taxid.json"
+		else
+			echo "Skipping $taxid - no glycosylation records"
+			# A live fetch just reconfirmed zero records for real - don't let a stale "had some,
+			# a while back" cache paper over that the next time a live fetch merely fails to connect.
+			rm -f "$cachedir/$taxid.json"
+		fi
+	elif [ -e "$cachedir/$taxid.json" ]; then
+		cached_version=$(node -e "console.log((JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8')).metadata || {})['data-version'] || 'unknown')" "$cachedir/$taxid.json")
+		echo "WARNING: live UniProt fetch failed for $taxid - falling back to the cached build from UniProt release $cached_version"
+		cp "$cachedir/$taxid.json" "$outdir/glycosylation-$taxid.json"
 	else
-		echo "Skipping $taxid - no glycosylation records"
+		echo "WARNING: live UniProt fetch failed for $taxid and no cached fallback is available - skipping"
 	fi
 	# UniProt rate-limits by request rate, not just concurrency - firing one REST request per taxid
 	# back-to-back across all 9 organisms with nothing in between is what triggered 429s here. A
