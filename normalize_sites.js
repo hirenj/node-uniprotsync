@@ -40,7 +40,12 @@ function convertMarker(marker, accession, position) {
     if (marker === 'Man') {
         const cls = MAN_CLASS[accession + '\t' + position];
         if (!cls) {
-            throw new Error(`normalize_sites: no O-Man/C-Man classification for ${accession} position ${position}`);
+            // Expected, periodic maintenance (see fetch_man_classification.js's own comment: "run
+            // this again ... whenever a new taxonomy is added or UniProt's annotations change") -
+            // not corruption. Skip just this one site rather than failing the whole quarterly
+            // build; re-run fetch_man_classification.js to pick it up for next time.
+            console.warn(`normalize_sites: no O-Man/C-Man classification for ${accession} position ${position} - skipping this site (re-run fetch_man_classification.js)`);
+            return null;
         }
         return { inferred: [cls] };
     }
@@ -70,12 +75,21 @@ function convertMarker(marker, accession, position) {
         // no dataset-wide certainty the way e.g. a SimpleCell line gives published-sitedata.
         return { observed: '1x' + marker };
     }
-    throw new Error(`normalize_sites: unrecognised site marker ${JSON.stringify(marker)}`);
+    // A new UniProt raw feature-note wording the recipe's `compositions` dictionary doesn't have an
+    // entry for yet (surfaces as marker === null, since the recipe's lookup found nothing) - also
+    // expected, periodic maintenance, not corruption. Skip this one site rather than failing the
+    // whole quarterly build; add the new wording to sources/glycosylation.recipe.json's
+    // `compositions` map to pick it up for next time.
+    console.warn(`normalize_sites: unrecognised site marker ${JSON.stringify(marker)} for ${accession} position ${position} - skipping this site`);
+    return null;
 }
 
 function convertSites(entry, accession) {
     const converted = (entry.sites || []).map(([position, marker]) => {
         const result = convertMarker(marker, accession, position);
+        if (!result) {
+            return null;
+        }
         const site = { position };
         if (result.observed !== undefined) {
             site.observed = result.observed;
@@ -84,7 +98,7 @@ function convertSites(entry, accession) {
             site.inferred = result.inferred;
         }
         return site;
-    });
+    }).filter(Boolean);
     if (converted.length) {
         entry.sites = converted;
     } else {
